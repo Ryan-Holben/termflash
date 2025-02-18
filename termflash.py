@@ -19,12 +19,12 @@ from time import sleep
 
 filler_char = "\u2588"  # █ (full block character)
 
-def main(stdscr, flash_rate, duration):
+def curses_main(stdscr, flash_rate, duration):
     curses.start_color()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_RED)
     stdscr.clear()
     height, width = stdscr.getmaxyx()  # Get screen size
-
+        
     def fill_scr(char):
         string = char * (width - 1)
         for row in range(height):
@@ -39,11 +39,13 @@ def main(stdscr, flash_rate, duration):
         stdscr.refresh()
         sleep(flash_rate)
 
-
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="🚨 Make the terminal flash to grab your attention. 🚨")
     parser.add_argument("--flash_rate", type=float, default=0.08, help="Time in seconds between flashes.")
     parser.add_argument("--duration", type=float, default=1.0, help="Total duration of flashing in seconds.")
-
     args = parser.parse_args()
-    curses.wrapper(main, args.flash_rate, args.duration)
+
+    curses.wrapper(curses_main, args.flash_rate, args.duration) 
+
+if __name__ == "__main__":
+    main()
