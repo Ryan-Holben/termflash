@@ -9,10 +9,12 @@ Ideal for alerting when a long-running job is complete.
 - Useful for automation and script notifications  
 
 ## 🚀 Installation  
-Clone the repo:  
+ 
 ```sh
-git clone https://github.com/Ryan-Holben/termflash.git
+git clone https://github.com/Ryan-Holben/termflash.git # Clone the repo
 cd termflash
+pip install .   # Install via pip
+cd .. && rm -rf termflash   # Remove the repo folder
 ```
 
 ## 🖥️ Example usage
