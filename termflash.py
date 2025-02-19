@@ -10,7 +10,7 @@ Description:
 Ideal for alerting when a long-running job is complete. 🚨  
 
 Usage:  
-    python termflash.py --flash_rate 0.25 --duration 1  
+    python termflash.py --rate 0.25 --duration 1  
 """
 
 import argparse
@@ -19,9 +19,10 @@ from time import sleep
 
 filler_char = "\u2588"  # █ (full block character)
 
-def curses_main(stdscr, flash_rate, duration):
+def curses_main(stdscr, rate, duration, code):
     curses.start_color()
-    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_RED)
+    color = curses.COLOR_GREEN if code == 0 else curses.COLOR_RED
+    curses.init_pair(1, color, color)
     stdscr.clear()
     height, width = stdscr.getmaxyx()  # Get screen size
         
@@ -31,21 +32,24 @@ def curses_main(stdscr, flash_rate, duration):
             stdscr.addstr(row, 0, string, curses.color_pair(1))
         stdscr.refresh()
 
-    num_flashes = int(duration / (2 * flash_rate))
+    num_flashes = int(duration / (2 * rate))
     for _ in range(num_flashes):
         fill_scr(filler_char)
-        sleep(flash_rate)
+        sleep(rate)
         stdscr.clear()
         stdscr.refresh()
-        sleep(flash_rate)
+        sleep(rate)
+        
+    exit(code)
 
 def main():
     parser = argparse.ArgumentParser(description="🚨 Make the terminal flash to grab your attention. 🚨")
-    parser.add_argument("--flash_rate", type=float, default=0.08, help="Time in seconds between flashes.")
-    parser.add_argument("--duration", type=float, default=1.0, help="Total duration of flashing in seconds.")
+    parser.add_argument("-r", "--rate", type=float, default=0.08, help="Time in seconds between flashes.")
+    parser.add_argument("-f", "--duration", type=float, default=1.0, help="Total duration of flashing in seconds.")
+    parser.add_argument("-c", "--code", "--color", type=int, default=0, help="Exit code to pass through.  0 gives green, other codes give red.")
     args = parser.parse_args()
 
-    curses.wrapper(curses_main, args.flash_rate, args.duration) 
+    curses.wrapper(curses_main, args.rate, args.duration, args.code) 
 
 if __name__ == "__main__":
     main()
